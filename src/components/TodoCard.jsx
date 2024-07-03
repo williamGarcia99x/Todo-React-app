@@ -10,6 +10,7 @@ import { faCalendar } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import { twMerge } from "tailwind-merge";
 
 const blue = "#079aff";
 const orange = "#fe7e09";
@@ -36,6 +37,18 @@ function getTodoColor(todoDueDate) {
   } else {
     return blue;
   }
+}
+
+function scaleNumberToCategory(scaleValue) {
+  if (scaleValue <= 3) return "Low";
+  if (scaleValue <= 7) return "Medium";
+  else return "High";
+}
+
+function FontAwesomeIconCustom({ icon, className }) {
+  return (
+    <FontAwesomeIcon icon={icon} className={twMerge("h-4 w-4", className)} />
+  );
 }
 
 function TodoCard({ todoObj }) {
@@ -76,15 +89,37 @@ function TodoCard({ todoObj }) {
           </button>
         </div>
       </div>
-      <div className="flex">
-        <FontAwesomeIcon className="h-4 w-4" icon={faCalendar} />
-        <p>Due Date: {formatDate(todoObj.dueDate)} </p>
+      <div className="flex gap-2">
+        <FontAwesomeIconCustom icon={faCalendar} />
+        <p className="font-light text-gray-600">
+          Due Date:{" "}
+          <span style={{ color: getTodoColor(todoObj.dueDate) }}>
+            {formatDate(todoObj.dueDate)}
+          </span>
+        </p>
       </div>
-
       <div className="relative flex justify-between">
         <div>
-          <p>Priority: {todoObj.priority}</p>
-          <p>Complexity: {todoObj.complexity}</p>
+          <div className="flex gap-2">
+            <FontAwesomeIconCustom icon={faArrowUp} />
+            <p className="font-light text-gray-600">
+              Priority:{" "}
+              <span className="font-normal text-black">
+                {scaleNumberToCategory(todoObj.priority)} ({todoObj.priority}
+                /10)
+              </span>
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <FontAwesomeIconCustom icon={faArrowsUpDownLeftRight} />
+            <p className="font-light text-gray-600">
+              Complexity:{" "}
+              <span className="font-normal text-black">
+                {scaleNumberToCategory(todoObj.complexity)} (
+                {todoObj.complexity}/10)
+              </span>
+            </p>
+          </div>
         </div>
         <div className="absolute right-0 h-14 w-14">
           <CircularProgressbar
@@ -98,7 +133,6 @@ function TodoCard({ todoObj }) {
           />
         </div>
       </div>
-
       <ul className="flex gap-4">
         {todoObj.tags.map((tag, i) => (
           <li key={i + tag}>

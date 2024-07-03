@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+const defaultTheme = require("tailwindcss/defaultTheme");
+
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
@@ -7,6 +9,9 @@ export default {
         "gray-copulsory": "#717171",
         "blue-hover-ring": "#079aff",
         "main-blue": "#079aff",
+      },
+      fontFamily: {
+        inter: ['"inter"', ...defaultTheme.fontFamily.sans],
       },
     },
   },
