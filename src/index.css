@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .checklist-container {
+    scrollbar-gutter: stable;
+  }
+
+  .todo-editor-page-container {
+    margin: 0 auto;
+    max-width: 500px;
+    padding: 50px 0;
+  }
+}
