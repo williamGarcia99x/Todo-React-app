@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   faPencil,
   faCheck,
@@ -51,9 +51,34 @@ function FontAwesomeIconCustom({ icon, className }) {
   );
 }
 
-function TodoCard({ todoObj }) {
-  const navigate = useNavigate();
+function TagList({ tags }) {
+  let colorOptions = ["#d2e3c8b3", "#FEFFD2", "#FFEEF4", "#ccd3ca7f"];
+  const chosenOptions = [];
 
+  while (colorOptions.length > 0) {
+    let chosenIndex = Math.floor(Math.random() * colorOptions.length);
+    chosenOptions.push(colorOptions[chosenIndex]);
+    colorOptions = colorOptions.filter((_, i) => i !== chosenIndex);
+  }
+
+  return (
+    <ul className="flex gap-2">
+      {tags.map((tag, i) => (
+        <li
+          className="rounded-md p-1 text-sm font-normal text-black"
+          style={{ backgroundColor: `${chosenOptions[i]}` }}
+          key={i + tag}
+        >
+          {tag[0].toUpperCase() + tag.slice(1).toLowerCase()}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+const lightBlue = "#8cd7ff83";
+
+function TodoCard({ todoObj }) {
   const progressCompletion = Math.trunc(
     (todoObj.checkList.reduce(
       (acc, val) => (val.isComplete ? acc + 1 : acc),
@@ -65,26 +90,26 @@ function TodoCard({ todoObj }) {
 
   //calculate the color of the todo based on how close we are to it's due date
 
-  function handleClickOnEdit(e, todoId) {
-    e.stopPropagation();
-    navigate(`edit/${todoId}`);
-  }
-
   return (
-    <li onClick={() => navigate(`${todoObj.id}`)} className="cursor-pointer">
+    <li className="rounded-xl p-6 shadow-md hover:bg-[#8cd7ff83] hover:shadow-xl">
       <div className="flex justify-between">
         <div className="flex items-center gap-2">
           <figure
             className="h-4 w-4 rounded-[50%]"
             style={{ backgroundColor: `${getTodoColor(todoObj.dueDate)}` }}
           ></figure>
-          <p className="font-medium">{todoObj.taskName}</p>
+          <Link to={todoObj.id} className="font-medium">
+            {todoObj.taskName}
+          </Link>
         </div>
-        <div className="flex gap-2">
-          <button onClick={(e) => handleClickOnEdit(e, todoObj.id)}>
+        <div className="flex gap-4">
+          <Link
+            to={`edit/${todoObj.id}`}
+            className="todo-card-buttons text-gray-copulsory"
+          >
             <FontAwesomeIcon icon={faPencil} />
-          </button>
-          <button>
+          </Link>
+          <button className="todo-card-buttons text-gray-copulsory">
             <FontAwesomeIcon icon={faCheck} />
           </button>
         </div>
@@ -98,7 +123,7 @@ function TodoCard({ todoObj }) {
           </span>
         </p>
       </div>
-      <div className="relative flex justify-between">
+      <div className="relative mb-2 flex justify-between">
         <div>
           <div className="flex gap-2">
             <FontAwesomeIconCustom icon={faArrowUp} />
@@ -133,13 +158,7 @@ function TodoCard({ todoObj }) {
           />
         </div>
       </div>
-      <ul className="flex gap-4">
-        {todoObj.tags.map((tag, i) => (
-          <li key={i + tag}>
-            {tag[0].toUpperCase() + tag.slice(1).toLowerCase()}
-          </li>
-        ))}
-      </ul>
+      <TagList tags={todoObj.tags} />
     </li>
   );
 }

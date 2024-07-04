@@ -2,7 +2,6 @@ import { useReducer } from "react";
 import { useTodos } from "../../contexts/TodosContext";
 import TodoList from "./TodoList";
 import FilterOptions from "./FilterOptions";
-import Header from "./Header";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
@@ -94,9 +93,9 @@ export default function MainMenu() {
   //We want the todos that have all of the selected tags
   return (
     <div className="todo-editor-page-container">
-      <Header>
+      <header className="mb-6 flex flex-col items-center">
         <form
-          className="mb-6 flex w-[75%] flex-col gap-4"
+          className="flex w-[75%] flex-col gap-4"
           onSubmit={(e) => e.preventDefault()}
         >
           <TextInput
@@ -115,7 +114,7 @@ export default function MainMenu() {
             filterOptionsSelected={filterOptionsSelected}
           />
         </form>
-      </Header>
+      </header>
       <TodoList todos={filteredTodos} />
       <Link to="new">+ Add New Task</Link>
     </div>

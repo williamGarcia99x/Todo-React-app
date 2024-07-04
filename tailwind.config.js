@@ -7,6 +7,7 @@ export default {
     extend: {
       colors: {
         "gray-copulsory": "#717171",
+        "blue-light": "#dfebf5",
         "blue-hover-ring": "#079aff",
         "main-blue": "#079aff",
       },

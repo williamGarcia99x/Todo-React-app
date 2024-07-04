@@ -4,13 +4,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useTodos } from "../../contexts/TodosContext";
 
 const sortOptions = [
-  { uiName: "Default", value: "default" },
-  { uiName: "Due Date: earliest first", value: "ascending-due-date" },
-  { uiName: "Due Date: latest first", value: "descending-due-date" },
-  { uiName: "Complexity: low to high", value: "ascending-complexity" },
-  { uiName: "Complexity: high to low", value: "descending-complexity" },
-  { uiName: "Priority: low to high", value: "ascending-priority" },
-  { uiName: "Priority: high to low", value: "descending-priority" },
+  { label: "Default", value: "default" },
+  { label: "Due Date: earliest first", value: "ascending-due-date" },
+  { label: "Due Date: latest first", value: "descending-due-date" },
+  { label: "Complexity: low to high", value: "ascending-complexity" },
+  { label: "Complexity: high to low", value: "descending-complexity" },
+  { label: "Priority: low to high", value: "ascending-priority" },
+  { label: "Priority: high to low", value: "descending-priority" },
 ];
 
 function FilterOptions({
@@ -53,9 +53,9 @@ function FilterOptions({
   }, []);
 
   return (
-    <div className=" flex gap-10 justify-center">
+    <div className="flex justify-center gap-10">
       <fieldset
-        className="flex flex-grow justify-center border border-black  basis-1/4 relative rounded-xl"
+        className="relative flex flex-grow basis-1/4 justify-center rounded-xl border border-black"
         ref={sortFieldsetRef}
       >
         <button
@@ -67,13 +67,13 @@ function FilterOptions({
         </button>
         {/* Below is the set of sort options that is to be conditionally rendered */}
         {showSortOptions && (
-          <ul className=" p-2 absolute top-8  border rounded-md  shadow-lg bg-white w-[125%]">
+          <ul className="absolute top-8 w-[125%] rounded-md border bg-white p-2 shadow-lg">
             {sortOptions.map((option) => (
               <li
                 className="flex justify-between border-b-2"
                 key={option.value}
               >
-                <label>{option.uiName}</label>
+                <label>{option.label}</label>
                 <input
                   type="radio"
                   value={option.value}
@@ -87,7 +87,7 @@ function FilterOptions({
         )}
       </fieldset>
       <fieldset
-        className="flex flex-grow justify-center border border-black basis-1/4 relative rounded-xl"
+        className="relative flex flex-grow basis-1/4 justify-center rounded-xl border border-black"
         ref={filterFieldsetRef}
       >
         <button
@@ -99,7 +99,7 @@ function FilterOptions({
         </button>
         {/* Below is the set of filter options that is to be conditionally rendered */}
         {showFilterOptions && (
-          <ul className="p-2 absolute top-8  border rounded-md w-3/4 shadow-lg bg-white  ">
+          <ul className="absolute top-8 w-3/4 rounded-md border bg-white p-2 shadow-lg">
             {/* Display filters if there exists any */}
             {tags.map((tag, i) => (
               <li className="flex justify-between border-b-2" key={i + tag}>

@@ -17,6 +17,18 @@
     max-width: 500px;
     padding: 50px 0;
   }
+
+  .todo-card-buttons {
+    /* flex h-7 w-7 items-center justify-center rounded-[50%] bg-[#8cd7ff4e] text-gray-copulsory" */
+    background-color: #8cd7ff4e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 1.75rem;
+    width: 1.75rem;
+    border-radius: 50%;
+    /* background-color: #feffd2d2; */
+  }
 }
 
 @tailwind utilities;
