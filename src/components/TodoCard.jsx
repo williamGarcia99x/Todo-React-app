@@ -24,13 +24,35 @@ function formatDate(date) {
   });
 }
 
+function formatLabel(date) {
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
+
+  // Reset hours, minutes, seconds, and milliseconds to zero for comparison
+  today.setHours(0, 0, 0, 0);
+  tomorrow.setHours(0, 0, 0, 0);
+  date.setHours(0, 0, 0, 0);
+
+  if (date.getTime() === today.getTime()) {
+    return "Today";
+  } else if (date.getTime() === tomorrow.getTime()) {
+    return "Tomorrow";
+  } else {
+    return formatDate(date);
+  }
+}
+
 function getTodoColor(todoDueDate) {
   const currentDate = new Date();
+  const toDueDate = new Date(todoDueDate);
+  currentDate.setHours(0, 0, 0, 0);
+  toDueDate.setHours(0, 0, 0, 0);
 
-  const timeDifference = todoDueDate - currentDate;
+  const timeDifference = toDueDate - currentDate;
   const daysDifference = timeDifference / (1000 * 60 * 60 * 24);
 
-  if (daysDifference < 1) {
+  if (daysDifference === 0) {
     return red;
   } else if (daysDifference < 3) {
     return orange;
@@ -76,17 +98,18 @@ function TagList({ tags }) {
   );
 }
 
-const lightBlue = "#8cd7ff83";
-
 function TodoCard({ todoObj }) {
-  const progressCompletion = Math.trunc(
-    (todoObj.checkList.reduce(
-      (acc, val) => (val.isComplete ? acc + 1 : acc),
-      0,
-    ) /
-      todoObj.checkList.length) *
-      100,
-  );
+  const progressCompletion =
+    todoObj.checkList.length > 0
+      ? Math.trunc(
+          (todoObj.checkList.reduce(
+            (acc, val) => (val.isComplete ? acc + 1 : acc),
+            0,
+          ) /
+            todoObj.checkList.length) *
+            100,
+        )
+      : 0;
 
   //calculate the color of the todo based on how close we are to it's due date
 
@@ -119,7 +142,7 @@ function TodoCard({ todoObj }) {
         <p className="font-light text-gray-600">
           Due Date:{" "}
           <span style={{ color: getTodoColor(todoObj.dueDate) }}>
-            {formatDate(todoObj.dueDate)}
+            {formatLabel(todoObj.dueDate)}
           </span>
         </p>
       </div>

@@ -73,7 +73,10 @@ function TodoEditorView({ onSubmit, editThisTodo = initialState }) {
         minutes: values.dueTime.$d.getMinutes(),
       },
       checkList,
-      tags: values.tags.split(",").map((val) => val.trim().toLowerCase()),
+      tags:
+        values.tags.length > 0
+          ? values.tags.split(",").map((val) => val.trim().toLowerCase())
+          : [],
     };
 
     onSubmit(userInput);

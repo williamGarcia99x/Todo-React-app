@@ -2,7 +2,7 @@ import TodoCard from "../../components/TodoCard";
 
 function TodoList({ todos }) {
   return (
-    <main>
+    <main className="">
       <ul className="flex flex-col gap-6">
         {todos.map((todoObj) => (
           <TodoCard key={todoObj.id} todoObj={todoObj} />
