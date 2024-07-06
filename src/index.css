@@ -11,8 +11,7 @@
   .checklist-container {
     scrollbar-gutter: stable;
   }
-
-  .todo-editor-page-container {
+  .page-container-default {
     margin: 0 auto;
     max-width: 500px;
     padding: 50px 0;

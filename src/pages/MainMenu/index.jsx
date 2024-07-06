@@ -92,10 +92,10 @@ export default function MainMenu() {
 
   //We want the todos that have all of the selected tags
   return (
-    <div className="todo-editor-page-container">
-      <header className="mb-6 flex flex-col items-center">
+    <div className="page-container-default bg-orange-100 lg:max-w-[900px]">
+      <header className="mb-6 flex justify-center bg-pink-200">
         <form
-          className="flex w-[75%] flex-col gap-4"
+          className="flex basis-[400px] flex-col gap-4"
           onSubmit={(e) => e.preventDefault()}
         >
           <TextInput
@@ -116,7 +116,14 @@ export default function MainMenu() {
         </form>
       </header>
       <TodoList todos={filteredTodos} />
-      <Link to="new">+ Add New Task</Link>
+      <div className="fixed bottom-6 left-1/2 flex -translate-x-1/2 justify-center">
+        <Link
+          className="rounded-3xl bg-main-blue p-3 text-xl font-light text-white"
+          to="new"
+        >
+          + Add New Task
+        </Link>
+      </div>
     </div>
   );
 }
