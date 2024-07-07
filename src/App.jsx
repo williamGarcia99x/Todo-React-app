@@ -1,4 +1,3 @@
-import PageContainer from "./components/Layout/PageContainer";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import MainMenu from "./pages/MainMenu/index";
 import TodoDetailedView from "./pages/TodoDetailedView/index";
@@ -8,7 +7,7 @@ import { TodosProvider } from "./contexts/TodosContext";
 
 function App() {
   return (
-    <div className="bg-slate-300">
+    <div className="">
       <TodosProvider>
         <BrowserRouter>
           <Routes>

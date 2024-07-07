@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { twMerge } from "tailwind-merge";
+import { Progress } from "antd";
 
 const blue = "#079aff";
 const orange = "#fe7e09";
@@ -24,7 +25,7 @@ function formatDate(date) {
   });
 }
 
-function formatLabel(date) {
+function formatLabel(dueDate) {
   const today = new Date();
   const tomorrow = new Date(today);
   tomorrow.setDate(today.getDate() + 1);
@@ -32,14 +33,16 @@ function formatLabel(date) {
   // Reset hours, minutes, seconds, and milliseconds to zero for comparison
   today.setHours(0, 0, 0, 0);
   tomorrow.setHours(0, 0, 0, 0);
-  date.setHours(0, 0, 0, 0);
+  dueDate.setHours(0, 0, 0, 0);
 
-  if (date.getTime() === today.getTime()) {
+  if (dueDate - today < 0) {
+    return "Overdue";
+  } else if (dueDate.getTime() === today.getTime()) {
     return "Today";
-  } else if (date.getTime() === tomorrow.getTime()) {
+  } else if (dueDate.getTime() === tomorrow.getTime()) {
     return "Tomorrow";
   } else {
-    return formatDate(date);
+    return formatDate(dueDate);
   }
 }
 
@@ -52,7 +55,7 @@ function getTodoColor(todoDueDate) {
   const timeDifference = toDueDate - currentDate;
   const daysDifference = timeDifference / (1000 * 60 * 60 * 24);
 
-  if (daysDifference === 0) {
+  if (daysDifference <= 0) {
     return red;
   } else if (daysDifference < 3) {
     return orange;
@@ -98,7 +101,7 @@ function TagList({ tags }) {
   );
 }
 
-function TodoCard({ todoObj }) {
+function TodoCard({ todoObj, className = "", inHomePage = true }) {
   const progressCompletion =
     todoObj.checkList.length > 0
       ? Math.trunc(
@@ -114,30 +117,36 @@ function TodoCard({ todoObj }) {
   //calculate the color of the todo based on how close we are to it's due date
 
   return (
-    <li className="rounded-xl p-6 shadow-md hover:bg-[#8cd7ff83] hover:shadow-xl">
-      <div className="flex justify-between">
+    <div className={twMerge("rounded-xl border shadow-md", className)}>
+      <div className={twMerge("flex justify-between", !inHomePage && "mb-1")}>
         <div className="flex items-center gap-2">
           <figure
             className="h-4 w-4 rounded-[50%]"
             style={{ backgroundColor: `${getTodoColor(todoObj.dueDate)}` }}
           ></figure>
-          <Link to={todoObj.id} className="font-medium">
-            {todoObj.taskName}
-          </Link>
+          {inHomePage ? (
+            <Link to={todoObj.id} className="font-medium">
+              {todoObj.taskName}
+            </Link>
+          ) : (
+            <h3 className="font-medium">{todoObj.taskName}</h3>
+          )}
         </div>
-        <div className="flex gap-4">
-          <Link
-            to={`edit/${todoObj.id}`}
-            className="todo-card-buttons text-gray-copulsory"
-          >
-            <FontAwesomeIcon icon={faPencil} />
-          </Link>
-          <button className="todo-card-buttons text-gray-copulsory">
-            <FontAwesomeIcon icon={faCheck} />
-          </button>
-        </div>
+        {inHomePage && (
+          <div className="flex gap-4">
+            <Link
+              to={`edit/${todoObj.id}`}
+              className="todo-card-buttons text-gray-copulsory"
+            >
+              <FontAwesomeIcon icon={faPencil} />
+            </Link>
+            <button className="todo-card-buttons text-gray-copulsory">
+              <FontAwesomeIcon icon={faCheck} />
+            </button>
+          </div>
+        )}
       </div>
-      <div className="flex gap-2">
+      <div className={twMerge("flex gap-2", !inHomePage && "mb-1")}>
         <FontAwesomeIconCustom icon={faCalendar} />
         <p className="font-light text-gray-600">
           Due Date:{" "}
@@ -146,9 +155,9 @@ function TodoCard({ todoObj }) {
           </span>
         </p>
       </div>
-      <div className="relative mb-2 flex justify-between">
+      <div className="mb-2 flex justify-between">
         <div>
-          <div className="flex gap-2">
+          <div className={twMerge("flex gap-2", !inHomePage && "mb-1")}>
             <FontAwesomeIconCustom icon={faArrowUp} />
             <p className="font-light text-gray-600">
               Priority:{" "}
@@ -169,20 +178,36 @@ function TodoCard({ todoObj }) {
             </p>
           </div>
         </div>
-        <div className="absolute right-0 h-14 w-14">
-          <CircularProgressbar
-            styles={buildStyles({
-              textSize: "25px",
-              pathColor: `${getTodoColor(todoObj.dueDate)}`,
-              textColor: "#000",
-            })}
-            value={progressCompletion}
-            text={`${progressCompletion}%`}
-          />
-        </div>
+        {inHomePage && (
+          <div className="relative h-14 w-14">
+            <CircularProgressbar
+              className="absolute right-0"
+              styles={buildStyles({
+                textSize: "25px",
+                pathColor: `${getTodoColor(todoObj.dueDate)}`,
+                textColor: "#000",
+              })}
+              value={progressCompletion}
+              text={`${progressCompletion}%`}
+            />
+          </div>
+        )}
       </div>
-      <TagList tags={todoObj.tags} />
-    </li>
+      {!inHomePage && (
+        <figure>
+          <figcaption className="flex justify-between">
+            <span>Task Completion</span>
+            <span className="text-main-blue">{progressCompletion}%</span>
+          </figcaption>
+          <Progress
+            percent={progressCompletion}
+            showInfo={false}
+            size={{ width: "450px", height: "13px" }}
+          />
+        </figure>
+      )}
+      {inHomePage && <TagList tags={todoObj.tags} />}
+    </div>
   );
 }
 
