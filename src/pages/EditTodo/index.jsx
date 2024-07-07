@@ -9,8 +9,6 @@ function EditTodo() {
   //don't need separate piece of state to hold the todo to edit. Component will only re-render
   const editThisTodo = getTodo(id);
 
-  console.log(editThisTodo);
-  console.log(id);
   function handleSubmit(todo) {
     editTodo(todo);
     navigate("/todos");

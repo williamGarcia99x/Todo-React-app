@@ -10,6 +10,7 @@ export default {
         "blue-light": "#dfebf5",
         "blue-hover-ring": "#079aff",
         "main-blue": "#079aff",
+        "blue-button-bg": "#8cd7ff4e",
       },
       fontFamily: {
         inter: ['"inter"', ...defaultTheme.fontFamily.sans],

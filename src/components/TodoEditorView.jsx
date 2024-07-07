@@ -87,7 +87,7 @@ function TodoEditorView({ onSubmit, editThisTodo = initialState }) {
     if (checklistItem) {
       setCheckList((state) => [
         ...state,
-        { task: checklistItem, isComplete: false },
+        { task: checklistItem.trim(), isComplete: false },
       ]);
       form.resetFields(["checklistItem"]);
     }

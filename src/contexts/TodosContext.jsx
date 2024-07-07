@@ -72,7 +72,6 @@ function TodosProvider({ children }) {
   }
 
   function getTodo(id) {
-    console.log("calling getTodo");
     return todos.find((obj) => obj.id === id);
   }
 
