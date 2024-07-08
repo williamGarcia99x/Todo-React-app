@@ -65,14 +65,18 @@ function TodosProvider({ children }) {
     setTodos((state) => [...state, newTodo]);
   }
 
+  function getTodo(id) {
+    return todos.find((obj) => obj.id === id);
+  }
+
   function editTodo(editThisTodo) {
     setTodos((state) =>
       state.map((obj) => (obj.id === editThisTodo.id ? editThisTodo : obj)),
     );
   }
 
-  function getTodo(id) {
-    return todos.find((obj) => obj.id === id);
+  function deleteTodo(id) {
+    setTodos((state) => state.filter((todoObj) => todoObj.id !== id));
   }
 
   useEffect(
@@ -83,7 +87,9 @@ function TodosProvider({ children }) {
   );
 
   return (
-    <TodosContext.Provider value={{ todos, addTodo, editTodo, getTodo }}>
+    <TodosContext.Provider
+      value={{ todos, addTodo, editTodo, getTodo, deleteTodo }}
+    >
       {children}
     </TodosContext.Provider>
   );

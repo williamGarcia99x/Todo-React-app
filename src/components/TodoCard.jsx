@@ -12,10 +12,13 @@ import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { twMerge } from "tailwind-merge";
 import { Progress } from "antd";
+import { useTodos } from "../contexts/TodosContext";
+import { memo, useMemo } from "react";
 
 const blue = "#079aff";
 const orange = "#fe7e09";
 const red = "#ff4033";
+const green = "#52c419";
 
 function formatDate(date) {
   return date.toLocaleDateString("en-US", {
@@ -25,7 +28,8 @@ function formatDate(date) {
   });
 }
 
-function formatLabel(dueDate) {
+function dueDateLabel(todo) {
+  const dueDate = todo.dueDate;
   const today = new Date();
   const tomorrow = new Date(today);
   tomorrow.setDate(today.getDate() + 1);
@@ -36,17 +40,24 @@ function formatLabel(dueDate) {
   dueDate.setHours(0, 0, 0, 0);
 
   if (dueDate - today < 0) {
-    return "Overdue";
+    return todo.isComplete
+      ? `Completed! Was due on ${formatDate(dueDate)}`
+      : `Overdue! Was due on ${formatDate(dueDate)}`;
   } else if (dueDate.getTime() === today.getTime()) {
-    return "Today";
+    return todo.isComplete ? "Completed! It's due today" : "Today";
   } else if (dueDate.getTime() === tomorrow.getTime()) {
-    return "Tomorrow";
+    return todo.isComplete ? "Completed! It's due tomorrow" : "Tomorrow";
   } else {
-    return formatDate(dueDate);
+    return todo.isComplete
+      ? `Completed! It's due ${formatDate(dueDate)}`
+      : formatDate(dueDate);
   }
 }
 
-function getTodoColor(todoDueDate) {
+function getTodoColor(todo) {
+  const todoDueDate = todo.dueDate;
+
+  if (todo.isComplete) return green;
   const currentDate = new Date();
   const toDueDate = new Date(todoDueDate);
   currentDate.setHours(0, 0, 0, 0);
@@ -76,7 +87,9 @@ function FontAwesomeIconCustom({ icon, className }) {
   );
 }
 
-function TagList({ tags }) {
+//TagList re-renders everytime the todocard re-renders which causes the background color of the tags to change. This component should only re-render whenever the tags change
+
+const TagList = memo(function TagList({ tags }) {
   let colorOptions = ["#d2e3c8b3", "#FEFFD2", "#FFEEF4", "#ccd3ca7f"];
   const chosenOptions = [];
 
@@ -99,9 +112,38 @@ function TagList({ tags }) {
       ))}
     </ul>
   );
-}
+});
 
 function TodoCard({ todoObj, className = "", inHomePage = true }) {
+  const { editTodo } = useTodos();
+
+  function toggleTodoCompletion() {
+    const todoEdit = {
+      ...todoObj,
+    };
+
+    //It todo is not complete, then toggle all checklist items complete and mark bool flag isComplete to true
+    if (!todoObj.isComplete) {
+      if (todoObj.checkList.length > 0) {
+        todoEdit.checkList = todoEdit.checkList.map((checkListItem) => {
+          return { ...checkListItem, isComplete: true };
+        });
+      }
+      todoEdit.isComplete = true;
+    }
+    //It todo is complete, then toggle all checklist items incomplete and mark bool flag isComplete to false
+    else {
+      if (todoObj.checkList.length > 0) {
+        todoEdit.checkList = todoEdit.checkList.map((checkListItem) => {
+          return { ...checkListItem, isComplete: false };
+        });
+      }
+      todoEdit.isComplete = false;
+    }
+
+    editTodo(todoEdit);
+  }
+
   const progressCompletion =
     todoObj.checkList.length > 0
       ? Math.trunc(
@@ -112,9 +154,9 @@ function TodoCard({ todoObj, className = "", inHomePage = true }) {
             todoObj.checkList.length) *
             100,
         )
-      : 0;
-
-  //calculate the color of the todo based on how close we are to it's due date
+      : todoObj.isComplete
+        ? 100
+        : 0;
 
   return (
     <div className={twMerge("rounded-xl border shadow-md", className)}>
@@ -122,7 +164,7 @@ function TodoCard({ todoObj, className = "", inHomePage = true }) {
         <div className="flex items-center gap-2">
           <figure
             className="h-4 w-4 rounded-[50%]"
-            style={{ backgroundColor: `${getTodoColor(todoObj.dueDate)}` }}
+            style={{ backgroundColor: `${getTodoColor(todoObj)}` }}
           ></figure>
           {inHomePage ? (
             <Link to={todoObj.id} className="font-medium">
@@ -140,24 +182,34 @@ function TodoCard({ todoObj, className = "", inHomePage = true }) {
             >
               <FontAwesomeIcon icon={faPencil} />
             </Link>
-            <button className="todo-card-buttons text-gray-copulsory">
+            <button
+              className="todo-card-buttons text-gray-copulsory"
+              onClick={toggleTodoCompletion}
+            >
               <FontAwesomeIcon icon={faCheck} />
             </button>
           </div>
         )}
       </div>
-      <div className={twMerge("flex gap-2", !inHomePage && "mb-1")}>
-        <FontAwesomeIconCustom icon={faCalendar} />
+      <div
+        className={twMerge("flex items-center gap-2", !inHomePage && "mb-1")}
+      >
+        <FontAwesomeIconCustom className="" icon={faCalendar} />
         <p className="font-light text-gray-600">
           Due Date:{" "}
-          <span style={{ color: getTodoColor(todoObj.dueDate) }}>
-            {formatLabel(todoObj.dueDate)}
+          <span className="" style={{ color: getTodoColor(todoObj) }}>
+            {dueDateLabel(todoObj)}
           </span>
         </p>
       </div>
       <div className="mb-2 flex justify-between">
         <div>
-          <div className={twMerge("flex gap-2", !inHomePage && "mb-1")}>
+          <div
+            className={twMerge(
+              "flex items-center gap-2",
+              !inHomePage && "mb-1",
+            )}
+          >
             <FontAwesomeIconCustom icon={faArrowUp} />
             <p className="font-light text-gray-600">
               Priority:{" "}
@@ -167,7 +219,7 @@ function TodoCard({ todoObj, className = "", inHomePage = true }) {
               </span>
             </p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex items-center gap-2">
             <FontAwesomeIconCustom icon={faArrowsUpDownLeftRight} />
             <p className="font-light text-gray-600">
               Complexity:{" "}
@@ -184,7 +236,7 @@ function TodoCard({ todoObj, className = "", inHomePage = true }) {
               className="absolute right-0"
               styles={buildStyles({
                 textSize: "25px",
-                pathColor: `${getTodoColor(todoObj.dueDate)}`,
+                pathColor: `${getTodoColor(todoObj)}`,
                 textColor: "#000",
               })}
               value={progressCompletion}
@@ -197,7 +249,9 @@ function TodoCard({ todoObj, className = "", inHomePage = true }) {
         <figure>
           <figcaption className="flex justify-between">
             <span>Task Completion</span>
-            <span className="text-main-blue">{progressCompletion}%</span>
+            <span style={{ color: todoObj.isComplete ? green : blue }}>
+              {progressCompletion}%
+            </span>
           </figcaption>
           <Progress
             percent={progressCompletion}

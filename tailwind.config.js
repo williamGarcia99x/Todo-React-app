@@ -11,6 +11,8 @@ export default {
         "blue-hover-ring": "#079aff",
         "main-blue": "#079aff",
         "blue-button-bg": "#8cd7ff4e",
+        "red-deletion": "#ffe0de",
+        "green-completed": "#52c419",
       },
       fontFamily: {
         inter: ['"inter"', ...defaultTheme.fontFamily.sans],

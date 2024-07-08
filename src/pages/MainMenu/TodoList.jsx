@@ -8,7 +8,7 @@ function TodoList({ todos }) {
           <li key={todoObj.id}>
             <TodoCard
               todoObj={todoObj}
-              className="p-6 hover:bg-[#8cd7ff83] hover:shadow-xl"
+              className="h-[194px] p-6 hover:bg-[#8cd7ff83] hover:shadow-xl"
             />
           </li>
         ))}
