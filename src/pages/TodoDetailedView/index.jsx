@@ -5,6 +5,9 @@ import { twMerge } from "tailwind-merge";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faPencil, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
+import { motion } from "framer-motion";
+import Footer from "../../components/Footer";
+import { useEffect } from "react";
 
 function TodoDetailedView() {
   const { getTodo, editTodo, deleteTodo } = useTodos();
@@ -59,87 +62,104 @@ function TodoDetailedView() {
     const confirm = window.confirm(
       "Are you sure you wish to delete this Todo?",
     );
+    //Why does this work
     if (confirm) {
-      deleteTodo(todo.id);
       navigate("/todos");
+      setTimeout(() => deleteTodo(todo.id), 0);
     }
   }
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  if (!todo) return;
+
   return (
-    <div className="page-container-default min-h-screen">
-      <header className="mb-7 flex items-center justify-between text-3xl">
-        <Link to="/todos">
-          <p className="blue-hover-ring flex h-8 w-8 items-center justify-center rounded-[50%] hover:ring-2">
-            &larr;
-          </p>
-        </Link>
-        <h1 className="text-center">Task Details</h1>
-        <Link
-          to={`/todos/edit/${todo.id}`}
-          className="blue-hover-ring right-0 flex h-8 w-8 items-center justify-center rounded-[50%] hover:ring-2"
-        >
-          <FontAwesomeIcon className="h-5 w-5" icon={faPencil} />
-        </Link>
-      </header>
-      <div className="flex justify-center">
-        <TodoCard
-          todoObj={todo}
-          inHomePage={false}
-          className="px-3 py-6 text-lg"
-        />
-      </div>
-      <section
-        className={twMerge("hidden", todo.checkList.length > 0 && "mt-6 block")}
-      >
-        <h2 className="mb-2 text-lg">Checklist for subtasks</h2>
-        <ol className="flex max-h-[380px] flex-col gap-3 overflow-y-auto">
-          {todo.checkList.map((item, i) => (
-            <li key={i} className="rounded-3xl border p-2 shadow-md">
-              <div
-                className={twMerge(
-                  "flex items-center justify-between font-light",
-                )}
-              >
-                <h3 className="flex gap-2">
-                  <span className="w-7 text-right">{`${i + 1}. `}</span>
-                  {item.task}
-                </h3>
-                <button
-                  className={twMerge(
-                    "flex h-7 w-7 items-center justify-center rounded-full bg-blue-light",
-                    item.isComplete && "bg-main-blue text-white",
-                  )}
-                  onClick={() => handleCheckOffSubtask(i)}
-                >
-                  <FontAwesomeIcon icon={faCheck} />
-                </button>
-              </div>
-            </li>
-          ))}
-        </ol>
-      </section>
-      <div className="mt-6 flex justify-center">
-        <button
-          className="w-52 rounded-3xl bg-main-blue py-2 text-white hover:ring-1 hover:ring-main-blue"
-          onClick={toggleTodoCompletion}
-        >
-          <FontAwesomeIcon
-            icon={todo.isComplete ? faXmark : faCheck}
-            className="mr-2"
+    <motion.div
+      initial={{ width: 0 }}
+      animate={{ width: "100%" }}
+      exit={{ x: window.innerWidth }}
+    >
+      <div className="page-container-default min-h-screen">
+        <header className="mb-7 flex items-center justify-between text-3xl">
+          <Link to="/todos">
+            <p className="blue-hover-ring flex h-8 w-8 items-center justify-center rounded-[50%] hover:ring-2">
+              &larr;
+            </p>
+          </Link>
+          <h1 className="text-center">Task Details</h1>
+          <Link
+            to={`/todos/edit/${todo.id}`}
+            className="blue-hover-ring right-0 flex h-8 w-8 items-center justify-center rounded-[50%] hover:ring-2"
+          >
+            <FontAwesomeIcon className="h-5 w-5" icon={faPencil} />
+          </Link>
+        </header>
+        <div className="flex justify-center">
+          <TodoCard
+            todoObj={todo}
+            inHomePage={false}
+            className="px-3 py-6 text-lg"
           />
-          {todo.isComplete ? "Mark Incomplete" : "Mark Complete"}
-        </button>
-      </div>
-      <div className="mt-3 flex justify-center">
-        <button
-          className="hover w-52 rounded-3xl bg-red-deletion py-2 hover:ring-1 hover:ring-[#ff4133]"
-          onClick={handleDeleteTodo}
+        </div>
+        <section
+          className={twMerge(
+            "hidden",
+            todo.checkList.length > 0 && "mt-6 block",
+          )}
         >
-          <FontAwesomeIcon icon={faTrashCan} className="mr-2" />
-          Delete Todo
-        </button>
+          <h2 className="mb-2 text-lg">Checklist for subtasks</h2>
+          <ol className="flex max-h-[380px] flex-col gap-3 overflow-y-auto">
+            {todo.checkList.map((item, i) => (
+              <li key={i} className="rounded-3xl border p-2 shadow-md">
+                <div
+                  className={twMerge(
+                    "flex items-center justify-between font-light",
+                  )}
+                >
+                  <h3 className="flex gap-2">
+                    <span className="w-7 text-right">{`${i + 1}. `}</span>
+                    {item.task}
+                  </h3>
+                  <button
+                    className={twMerge(
+                      "flex h-7 w-7 items-center justify-center rounded-full bg-blue-light",
+                      item.isComplete && "bg-main-blue text-white",
+                    )}
+                    onClick={() => handleCheckOffSubtask(i)}
+                  >
+                    <FontAwesomeIcon icon={faCheck} />
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
+        <div className="mt-6 flex justify-center">
+          <button
+            className="w-52 rounded-3xl bg-main-blue py-2 text-white hover:ring-1 hover:ring-main-blue"
+            onClick={toggleTodoCompletion}
+          >
+            <FontAwesomeIcon
+              icon={todo.isComplete ? faXmark : faCheck}
+              className="mr-2"
+            />
+            {todo.isComplete ? "Mark Incomplete" : "Mark Complete"}
+          </button>
+        </div>
+        <div className="mt-3 flex justify-center">
+          <button
+            className="hover w-52 rounded-3xl bg-red-deletion py-2 hover:ring-1 hover:ring-[#ff4133]"
+            onClick={handleDeleteTodo}
+          >
+            <FontAwesomeIcon icon={faTrashCan} className="mr-2" />
+            Delete Todo
+          </button>
+        </div>
       </div>
-    </div>
+      <Footer />
+    </motion.div>
   );
 }
 

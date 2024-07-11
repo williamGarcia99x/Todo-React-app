@@ -37,6 +37,7 @@ function TodoEditorView({ onSubmit, editThisTodo }) {
 
   const [showPriorityErrMsg, setShowPriorityErrMsg] = useState(false);
   const [showComplexityErrMsg, setShowComplexityErrMsg] = useState(false);
+  const [showTagErrMsg, setShowTagErrMsg] = useState(false);
   const [form] = Form.useForm();
 
   function handleSubmit(values) {
@@ -51,8 +52,19 @@ function TodoEditorView({ onSubmit, editThisTodo }) {
       setShowComplexityErrMsg(true);
       isSubmissionInvalid = true;
     }
+
+    const tags =
+      values.tags.length > 0
+        ? values.tags.split(",").map((val) => val.trim().toLowerCase())
+        : [];
+
+    if (tags.length > 4) {
+      setShowTagErrMsg(true);
+      isSubmissionInvalid = true;
+    }
+
     if (isSubmissionInvalid) return;
-    console.log(values.dueTime);
+
     const submitThisTodo = {
       id: editThisTodo?.id ?? uuidv4(),
       taskName: values.taskName,
@@ -64,10 +76,7 @@ function TodoEditorView({ onSubmit, editThisTodo }) {
         minutes: values.dueTime.$d.getMinutes(),
       },
       checkList,
-      tags:
-        values.tags.length > 0
-          ? values.tags.split(",").map((val) => val.trim().toLowerCase())
-          : [],
+      tags: tags.filter((tag) => tag !== ""),
     };
 
     onSubmit(submitThisTodo);
@@ -113,6 +122,14 @@ function TodoEditorView({ onSubmit, editThisTodo }) {
     setComplexity((cpt) => (cpt === index ? 0 : index));
     //show error if when changing the priority level, the priority results in falsy value
     setShowComplexityErrMsg(complexity === index ? true : false);
+  }
+  function handleTagChange(value) {
+    const tags =
+      value.length > 0
+        ? value.split(",").map((val) => val.trim().toLowerCase())
+        : [];
+
+    tags.length > 4 ? setShowTagErrMsg(true) : setShowTagErrMsg(false);
   }
 
   //set the initial values for Task Name, Due Date, and Tags on the ant.design form components. Effect should only execute in the beginning
@@ -233,7 +250,6 @@ function TodoEditorView({ onSubmit, editThisTodo }) {
         <ol className="checklist-container flex max-h-36 flex-col items-end gap-1 overflow-y-auto">
           {checkList.map((item, index) => (
             <TextInput
-              required
               className="w-[95%] border-white"
               key={index}
               value={item.task}
@@ -250,13 +266,23 @@ function TodoEditorView({ onSubmit, editThisTodo }) {
           ))}
         </ol>
       </div>
-      <fieldset className="flex flex-col gap-2">
-        <FormLabel>Add Tags</FormLabel>
-        <Form.Item name="tags">
-          <TextInput placeholder="Interview, Urgent" />
+      <fieldset className="relative mb-4 flex flex-col">
+        <FormLabel className="mb-2">Add Tags</FormLabel>
+        <Form.Item name="tags" noStyle={true}>
+          <TextInput
+            placeholder="Interview, Urgent"
+            onChange={(e) => handleTagChange(e.target.value)}
+          />
         </Form.Item>
+        <p
+          className={twMerge(
+            `absolute -bottom-3 left-0 text-[#ff4d4f] opacity-0 transition-all duration-200 ease-in`,
+            showTagErrMsg && "-bottom-6 opacity-100",
+          )}
+        >
+          You can only add up to 4 tags!
+        </p>
       </fieldset>
-
       <div className="flex justify-center">
         <button className="rounded-3xl bg-main-blue px-8 py-2 text-lg font-light text-white hover:ring-1 hover:ring-main-blue">
           Save
@@ -264,7 +290,7 @@ function TodoEditorView({ onSubmit, editThisTodo }) {
       </div>
     </Form>
   );
-} //className="rounded-3xl bg-main-blue p-3 text-lg font-light text-white"
+}
 
 export default TodoEditorView;
 // This component represents the form to add a Todo task or edit a Todo task

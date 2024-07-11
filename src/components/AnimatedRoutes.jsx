@@ -16,7 +16,6 @@ function AnimatedRoutes() {
         <Route path="todos/:id" element={<TodoDetailedView />} />
         <Route path="todos/edit/:id" element={<EditTodo />} />
         <Route path="todos/new" element={<AddNewTodo />} />
-        <Route path="*" element={<div>Page Not Found</div>} />
       </Routes>
     </AnimatePresence>
   );
