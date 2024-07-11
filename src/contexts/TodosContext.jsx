@@ -1,43 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
+
 const TodosContext = createContext();
-//add a todo, delete a todo, edit a todo
-
-//this is the structure of a todo
-
-const todoSample2 = {
-  id: uuidv4(),
-  taskName: "Grocery shopping",
-  complexity: 3,
-  priority: 5,
-  dueDate: new Date(new Date().setDate(new Date().getDate() + 2)), // Due in 2 days
-  dueTime: { hours: 2, minutes: 23 },
-  checkList: [
-    { task: "Buy milk", isComplete: true },
-    { task: "Buy veggies", isComplete: true },
-    { task: "Buy cat food", isComplete: false },
-  ],
-  tags: ["shopping", "urgent", "boring", "cleanliness"],
-  percentComplete: 0,
-  isComplete: false,
-};
-
-const todoSample3 = {
-  id: uuidv4(),
-  taskName: "Finish project report",
-  complexity: 8,
-  priority: 9,
-  dueDate: new Date(new Date().setDate(new Date().getDate() + 7)), // Due in 7 days
-  dueTime: { hours: 0, minutes: 23 },
-  checkList: [
-    { task: "Present to teammates", isComplete: false },
-    { task: "Review final draft", isComplete: false },
-  ],
-  tags: ["work", "important", "urgent"],
-  percentComplete: 20,
-  isComplete: false,
-};
-const initialState = [todoSample2, todoSample3];
 
 function serializeDates(todoArray) {
   return todoArray.map((obj) => {
@@ -56,9 +19,7 @@ function deserializeDates(todoArray) {
 function TodosProvider({ children }) {
   const [todos, setTodos] = useState(function () {
     const storedValue = localStorage.getItem("todos");
-    return storedValue
-      ? deserializeDates(JSON.parse(storedValue))
-      : initialState;
+    return storedValue ? deserializeDates(JSON.parse(storedValue)) : [];
   });
 
   function addTodo(newTodo) {

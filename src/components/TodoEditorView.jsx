@@ -13,19 +13,6 @@ function FormLabel({ children, className = "" }) {
   return <label className={twMerge("text-lg", className)}>{children}</label>;
 }
 
-const initialState = {
-  id: uuidv4(),
-  taskName: "",
-  complexity: 0,
-  priority: 0,
-  dueDate: null,
-  dueTime: null,
-  checkList: [],
-  tags: [],
-  percentComplete: 0,
-  isComplete: false,
-};
-
 function formatDate(date) {
   const output = date.toLocaleDateString("en-US", {
     month: "2-digit",
@@ -39,10 +26,15 @@ function formatDate(date) {
 //To make this component reusable for the Add New Todo page and the Edit Todo page, we want this component to have a list of props with should be used to initialize all the pieces of state in the form. If these props are undefined, then set the form input value to the initial state value. We also want to pass a prop "onSubmit" which should be executed whenever the form is submitted.
 
 //editThisTodo is an optional parameter. It will be supplied in the Edit Todo page but not in the Add Todo page
-function TodoEditorView({ onSubmit, editThisTodo = initialState }) {
-  const [checkList, setCheckList] = useState(editThisTodo.checkList);
-  const [priority, setPriority] = useState(editThisTodo.priority);
-  const [complexity, setComplexity] = useState(editThisTodo.complexity);
+function TodoEditorView({ onSubmit, editThisTodo }) {
+  const [checkList, setCheckList] = useState(
+    () => editThisTodo?.checkList ?? [],
+  );
+  const [priority, setPriority] = useState(() => editThisTodo?.priority ?? 0);
+  const [complexity, setComplexity] = useState(
+    () => editThisTodo?.complexity ?? 0,
+  );
+
   const [showPriorityErrMsg, setShowPriorityErrMsg] = useState(false);
   const [showComplexityErrMsg, setShowComplexityErrMsg] = useState(false);
   const [form] = Form.useForm();
@@ -61,9 +53,8 @@ function TodoEditorView({ onSubmit, editThisTodo = initialState }) {
     }
     if (isSubmissionInvalid) return;
     console.log(values.dueTime);
-    const userInput = {
-      ...editThisTodo,
-      id: editThisTodo.id,
+    const submitThisTodo = {
+      id: editThisTodo?.id ?? uuidv4(),
       taskName: values.taskName,
       complexity,
       priority,
@@ -79,7 +70,7 @@ function TodoEditorView({ onSubmit, editThisTodo = initialState }) {
           : [],
     };
 
-    onSubmit(userInput);
+    onSubmit(submitThisTodo);
   }
 
   function handleAddCheckListItem() {
@@ -128,11 +119,11 @@ function TodoEditorView({ onSubmit, editThisTodo = initialState }) {
   useEffect(
     function () {
       form.setFieldsValue({
-        taskName: editThisTodo.taskName,
-        tags: editThisTodo.tags.join(", "),
-        dueDate: editThisTodo.dueDate && dayjs(editThisTodo.dueDate),
+        taskName: editThisTodo?.taskName ?? "",
+        tags: editThisTodo?.tags.join(", ") ?? "",
+        dueDate: editThisTodo?.dueDate && dayjs(editThisTodo.dueDate),
         dueTime:
-          editThisTodo.dueTime &&
+          editThisTodo?.dueTime &&
           dayjs(
             new Date(
               "",
@@ -161,10 +152,6 @@ function TodoEditorView({ onSubmit, editThisTodo = initialState }) {
           className="mb-0"
           rules={[{ required: true, message: "Please provide a task name!" }]}
         >
-          {/* <Input
-            className="rounded-3xl px-4 py-2 text-base"
-            placeholder="Research the company and its culture"
-          /> */}
           <TextInput placeholder="Buy cake for Sarah's birthdays" />
         </Form.Item>
       </fieldset>
@@ -271,13 +258,13 @@ function TodoEditorView({ onSubmit, editThisTodo = initialState }) {
       </fieldset>
 
       <div className="flex justify-center">
-        <button className="rounded-3xl bg-main-blue px-7 py-2 text-white hover:bg-[#047ecf]">
+        <button className="rounded-3xl bg-main-blue px-8 py-2 text-lg font-light text-white hover:ring-1 hover:ring-main-blue">
           Save
         </button>
       </div>
     </Form>
   );
-}
+} //className="rounded-3xl bg-main-blue p-3 text-lg font-light text-white"
 
 export default TodoEditorView;
 // This component represents the form to add a Todo task or edit a Todo task

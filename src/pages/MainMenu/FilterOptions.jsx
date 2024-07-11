@@ -76,7 +76,7 @@ function FilterOptions({
               <li className="border-b-2" key={option.value}>
                 <label
                   className={twMerge(
-                    "flex justify-between font-light text-gray-500",
+                    "flex items-center justify-between font-light text-gray-500",
                     sortOptionSelected === option.value && "text-black",
                   )}
                 >
@@ -117,7 +117,7 @@ function FilterOptions({
               <li className="border-b-2" key={i + tag}>
                 <label
                   className={twMerge(
-                    "flex justify-between font-light text-gray-500",
+                    "flex items-center justify-between font-light text-gray-500",
                     filterOptionsSelected.includes(tag) && "text-black",
                   )}
                 >

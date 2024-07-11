@@ -4,6 +4,9 @@
   * {
     @apply font-inter;
   }
+  html {
+    @apply h-full;
+  }
 }
 
 @tailwind components;

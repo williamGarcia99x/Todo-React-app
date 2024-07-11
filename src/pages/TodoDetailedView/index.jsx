@@ -66,8 +66,8 @@ function TodoDetailedView() {
   }
 
   return (
-    <div className="page-container-default">
-      <header className="relative mb-7 flex justify-between text-3xl">
+    <div className="page-container-default min-h-screen">
+      <header className="mb-7 flex items-center justify-between text-3xl">
         <Link to="/todos">
           <p className="blue-hover-ring flex h-8 w-8 items-center justify-center rounded-[50%] hover:ring-2">
             &larr;

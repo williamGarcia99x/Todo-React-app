@@ -15,7 +15,7 @@ function EditTodo() {
   }
 
   return (
-    <div className="page-container-default">
+    <div className="page-container-default min-h-screen">
       <div className="relative mb-7 text-3xl">
         <Link className="absolute" to="/todos">
           <p className="blue-hover-ring flex h-8 w-8 items-center justify-center rounded-[50%] hover:ring-2">

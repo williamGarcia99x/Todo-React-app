@@ -4,8 +4,13 @@ import TodoList from "./TodoList";
 import FilterOptions from "./FilterOptions";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import {
+  faFrown,
+  faMagnifyingGlass,
+  faSmile,
+} from "@fortawesome/free-solid-svg-icons";
 import TextInput from "../../components/TextInput";
+import Todo from "../../assets/blue-check.png";
 
 function reducer(state, action) {
   switch (action.type) {
@@ -92,37 +97,71 @@ export default function MainMenu() {
 
   //We want the todos that have all of the selected tags
   return (
-    <div className="page-container-default lg:max-w-[900px]">
-      <header className="mb-6 flex justify-center">
-        <form
-          className="flex basis-[400px] flex-col gap-4"
-          onSubmit={(e) => e.preventDefault()}
-        >
-          <TextInput
-            placeholder="Search..."
-            prefix={
-              <FontAwesomeIcon className="mr-2" icon={faMagnifyingGlass} />
-            }
-            value={query}
-            onChange={(e) =>
-              optionsDispatch({ type: "queryChange", payload: e.target.value })
-            }
-          />
-          <FilterOptions
-            optionsDispatch={optionsDispatch}
-            sortOptionSelected={sortOptionSelected}
-            filterOptionsSelected={filterOptionsSelected}
-          />
-        </form>
-      </header>
-      <TodoList todos={filteredTodos} />
-      <div className="fixed bottom-6 left-1/2 flex -translate-x-1/2 justify-center">
-        <Link
-          className="rounded-3xl bg-main-blue p-3 text-lg font-light text-white"
-          to="new"
-        >
-          + Add New Task
-        </Link>
+    <div className="flex min-h-screen flex-col">
+      <div className="mx-4 my-4 flex items-center justify-center gap-4 lg:justify-start">
+        <img src={Todo} className="h-10 w-10" />
+        <h1 className="text-3xl font-semibold text-main-blue">My Todos</h1>
+      </div>
+      <div className="relative mx-auto flex min-w-[375px] flex-grow flex-col sm:min-w-[500px] lg:min-w-[900px]">
+        <header className="mb-6 flex justify-center">
+          <form
+            className="flex basis-[400px] flex-col gap-4"
+            onSubmit={(e) => e.preventDefault()}
+          >
+            <TextInput
+              placeholder="Search..."
+              prefix={
+                <FontAwesomeIcon className="mr-2" icon={faMagnifyingGlass} />
+              }
+              value={query}
+              onChange={(e) =>
+                optionsDispatch({
+                  type: "queryChange",
+                  payload: e.target.value,
+                })
+              }
+            />
+            <FilterOptions
+              optionsDispatch={optionsDispatch}
+              sortOptionSelected={sortOptionSelected}
+              filterOptionsSelected={filterOptionsSelected}
+            />
+          </form>
+        </header>
+        {filteredTodos.length > 0 ? (
+          <main className="flex flex-grow flex-col">
+            <TodoList todos={filteredTodos} />
+            <div className="flex flex-grow items-end justify-center py-4">
+              <Link
+                className="rounded-3xl bg-main-blue p-3 text-lg font-light text-white hover:ring-1 hover:ring-main-blue"
+                to="new"
+              >
+                + Add New Task
+              </Link>
+            </div>
+          </main>
+        ) : (
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+            <div className="flex min-w-[300px] flex-col items-center justify-center gap-4 text-center text-gray-600">
+              <FontAwesomeIcon
+                icon={query.length === 0 ? faSmile : faFrown}
+                size="4x"
+              />
+              <h2 className="text-2xl font-semibold">No todos found</h2>
+              {query.length === 0 && (
+                <>
+                  <p className="text-lg">Get started by adding a new task!</p>
+                  <Link
+                    className="rounded-3xl bg-main-blue p-3 text-lg font-light text-white hover:ring-1 hover:ring-main-blue"
+                    to="new"
+                  >
+                    + Add New Task
+                  </Link>
+                </>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
