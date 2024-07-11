@@ -11,6 +11,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import TextInput from "../../components/TextInput";
 import Todo from "../../assets/blue-check.png";
+import { motion } from "framer-motion";
 
 function reducer(state, action) {
   switch (action.type) {
@@ -97,7 +98,12 @@ export default function MainMenu() {
 
   //We want the todos that have all of the selected tags
   return (
-    <div className="flex min-h-screen flex-col">
+    <motion.div
+      className="flex min-h-screen flex-col"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
       <div className="mx-4 my-4 flex items-center justify-center gap-4 lg:justify-start">
         <img src={Todo} className="h-10 w-10" />
         <h1 className="text-3xl font-semibold text-main-blue">My Todos</h1>
@@ -163,7 +169,7 @@ export default function MainMenu() {
           </div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }
 
