@@ -5,6 +5,7 @@
 This Todo App is a project designed to help users manage their tasks efficiently. The application provides a clean and professional user interface, ensuring a crisp and smmoth user experience across different devices, including smaller screens. The project demonstrates my skills in frontend development, with a strong focus on state management, data-flow, responsive design and CSS mastery.
 
 ## Learning and Concepts
+
 - This project served as a valuable learning experience, enhancing my proficiency in React and reinforcing fundamental concepts:
 
 - Advanced State Management: Explored the Context API and hooks such as useReducer and useState to manage complex state logic effectively. Learned how to implement these tools to create a global state, allowing for efficient state management and data flow throughout the application.
@@ -61,4 +62,4 @@ http://localhost:5173 (or another port specified in the console)
 
 The application should now be running locally 😎.
 
-If you simply want to use this app without diving into the code, you can access a live instance of the application hosted on netlify. The link is provided  [here](https://mytodos-tracker.netlify.app/todos).
+If you simply want to use this app without diving into the code, you can access a live instance of the application hosted on netlify. The link is provided [here](https://6691353881fea8277f038865--mytodos-tracker.netlify.app/todos).
