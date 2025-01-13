@@ -84,14 +84,14 @@ function TodoDetailedView() {
     >
       <div className="page-container-default min-h-screen">
         <header className="mb-7 flex items-center justify-between text-3xl">
-          <Link to="/todos">
+          <Link to="/">
             <p className="blue-hover-ring flex h-8 w-8 items-center justify-center rounded-[50%] hover:ring-2">
               &larr;
             </p>
           </Link>
           <h1 className="text-center">Task Details</h1>
           <Link
-            to={`/todos/edit/${todo.id}`}
+            to={`/edit/${todo.id}`}
             className="blue-hover-ring right-0 flex h-8 w-8 items-center justify-center rounded-[50%] hover:ring-2"
           >
             <FontAwesomeIcon className="h-5 w-5" icon={faPencil} />
