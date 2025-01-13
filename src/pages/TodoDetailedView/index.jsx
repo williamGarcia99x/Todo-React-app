@@ -16,6 +16,12 @@ function TodoDetailedView() {
   const todo = getTodo(id);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  if (!todo) return;
+
   function toggleTodoCompletion() {
     const todoEdit = {
       ...todo,
@@ -65,15 +71,10 @@ function TodoDetailedView() {
     //Why does this work
     if (confirm) {
       navigate("/todos");
-      setTimeout(() => deleteTodo(todo.id), 0);
+      // setTimeout(() => deleteTodo(todo.id), 0);
+      deleteTodo(todo.id);
     }
   }
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  if (!todo) return;
 
   return (
     <motion.div
