@@ -14,7 +14,7 @@ export default {
         "green-completed": "#52c419",
       },
       fontFamily: {
-        inter: ['"inter"', ...defaultTheme.fontFamily.sans],
+        inter: ['"inter"'],
       },
     },
   },
