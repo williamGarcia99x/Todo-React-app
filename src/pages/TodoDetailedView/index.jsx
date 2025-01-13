@@ -68,9 +68,9 @@ function TodoDetailedView() {
     const confirm = window.confirm(
       "Are you sure you wish to delete this Todo?",
     );
-    //Why does this work
+
     if (confirm) {
-      navigate("/todos");
+      navigate("/");
       // setTimeout(() => deleteTodo(todo.id), 0);
       deleteTodo(todo.id);
     }

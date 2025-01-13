@@ -10,7 +10,7 @@ function AddNewTodo() {
   const navigate = useNavigate();
   function handleSubmit(todo) {
     addTodo(todo);
-    navigate("/todos");
+    navigate("/");
   }
 
   useEffect(() => {

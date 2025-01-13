@@ -14,7 +14,7 @@ function EditTodo() {
 
   function handleSubmit(todo) {
     editTodo(todo);
-    navigate("/todos");
+    navigate("/");
   }
   useEffect(() => {
     window.scrollTo(0, 0);
