@@ -62,4 +62,4 @@ http://localhost:5173 (or another port specified in the console)
 
 The application should now be running locally 😎.
 
-If you simply want to use this app without diving into the code, you can access a live instance of the application hosted on netlify. The link is provided [here](https://6691353881fea8277f038865--mytodos-tracker.netlify.app/todos).
+If you simply want to use this app without diving into the code, you can access a live instance of the application hosted on netlify. The link is provided [here](https://todo-react-app-green-seven.vercel.app/).
